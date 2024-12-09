@@ -95,14 +95,18 @@
 
       const assignments = shufflePlayers(players);
 
-      // Generate unique game link
-      const gameData = JSON.stringify(assignments);
+      // Generate individual links for each player
+      let linksHTML = '';
+      players.forEach(player => {
+        const playerData = { [player]: assignments[player] };
+        const gameData = JSON.stringify(playerData);
+        const playerLink = `${window.location.origin}/SecretSanta24/game.html?game=${btoa(gameData)}&player=${encodeURIComponent(player)}`;
+        linksHTML += `<p><a href="${playerLink}" target="_blank">${player}'s Secret Santa Link</a></p>`;
+      });
 
-      // Generate the correct URL for the game
-      const gameLink = `${window.location.origin}/SecretSanta24/game.html?game=${btoa(gameData)}`;
       const linkElement = document.getElementById('gameLink');
       linkElement.style.display = 'block';
-      linkElement.innerHTML = `Game Link: <a href="${gameLink}" target="_blank">${gameLink}</a>`;
+      linkElement.innerHTML = `Generated Links: ${linksHTML}`;
     }
 
     function shufflePlayers(players) {
