@@ -13,22 +13,22 @@
     window.onload = function() {
       const urlParams = new URLSearchParams(window.location.search);
       const gameData = urlParams.get('game');
+      const player = urlParams.get('player');
 
-      if (gameData) {
+      if (gameData && player) {
         try {
           // Decode base64 game data and parse JSON
           const decodedData = atob(gameData);
           const assignments = JSON.parse(decodedData);
 
-          // Display the game results
-          const resultsDiv = document.getElementById('gameResults');
-          let resultsHtml = "<ul>";
-          for (const giver in assignments) {
-            resultsHtml += `<li>${giver} gives a gift to ${assignments[giver]}</li>`;
+          // Display the recipient for this player
+          const recipient = assignments[player];
+          if (recipient) {
+            const resultsDiv = document.getElementById('gameResults');
+            resultsDiv.innerHTML = `<p>Your Secret Santa recipient is: <strong>${recipient}</strong></p>`;
+          } else {
+            alert("Player not found in the game data.");
           }
-          resultsHtml += "</ul>";
-          resultsDiv.innerHTML = resultsHtml;
-
         } catch (error) {
           alert('Error processing the game data.');
           console.error(error);
