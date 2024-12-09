@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secret Santa</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background: #f0f8ff;
+    }
+    .container {
+      margin: 50px auto;
+      max-width: 500px;
+      padding: 20px;
+      background: #fff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    input {
+      margin: 5px 0;
+      padding: 8px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to Secret Santa!</h1>
+    <p>Organize your Secret Santa gift exchange easily.</p>
+    <button onclick="goToAdminPage()">Start</button>
+  </div>
+
+  <script>
+    function goToAdminPage() {
+      document.body.innerHTML = `
+        <div class="container">
+          <h2>Enter Players</h2>
+          <p>Add the names of all participants:</p>
+          <form id="playerForm">
+            <input type="text" id="playerInput" placeholder="Enter name" />
+            <button type="button" onclick="addPlayer()">Add Player</button>
+          </form>
+          <ul id="playerList"></ul>
+          <button onclick="generateGame()">Generate Game</button>
+          <p id="gameLink" style="display:none;"></p>
+        </div>
+      `;
+    }
+
+    let players = [];
+
+    function addPlayer() {
+      const input = document.getElementById('playerInput');
+      const name = input.value.trim();
+
+      if (name && !players.includes(name)) {
+        players.push(name);
+        const playerList = document.getElementById('playerList');
+        const listItem = document.createElement('li');
+        listItem.textContent = name;
+        playerList.appendChild(listItem);
+        input.value = '';
+      } else {
+        alert('Name is empty or already added.');
+      }
+    }
+
+    function generateGame() {
+      if (players.length < 2) {
+        alert('You need at least 2 players for Secret Santa!');
+        return;
+      }
+
+      const assignments = shufflePlayers(players);
+
+      // Generate unique game link
+      const gameData = JSON.stringify(assignments);
+      const gameLink = `${window.location.origin}?game=${btoa(gameData)}`;
+      const linkElement = document.getElementById('gameLink');
+      linkElement.style.display = 'block';
+      linkElement.innerHTML = `Game Link: <a href="${gameLink}" target="_blank">${gameLink}</a>`;
+    }
+
+    function shufflePlayers(players) {
+      const shuffled = [...players];
+      let assignments = {};
+
+      do {
+        shuffled.sort(() => Math.random() - 0.5);
+      } while (!isValidShuffle(players, shuffled));
+
+      for (let i = 0; i < players.length; i++) {
+        assignments[players[i]] = shuffled[i];
+      }
+
+      return assignments;
+    }
+
+    function isValidShuffle(original, shuffled) {
+      return original.every((player, i) => player !== shuffled[i]);
+    }
+  </script>
+</body>
+</html>
