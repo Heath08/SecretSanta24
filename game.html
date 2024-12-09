@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secret Santa Game Results</title>
+</head>
+<body>
+  <h1>Secret Santa Game Results</h1>
+  <div id="gameResults"></div>
+
+  <script>
+    window.onload = function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const gameData = urlParams.get('game');
+
+      if (gameData) {
+        try {
+          // Decode base64 game data and parse JSON
+          const decodedData = atob(gameData);
+          const assignments = JSON.parse(decodedData);
+
+          // Display the game results
+          const resultsDiv = document.getElementById('gameResults');
+          let resultsHtml = "<ul>";
+          for (const giver in assignments) {
+            resultsHtml += `<li>${giver} gives a gift to ${assignments[giver]}</li>`;
+          }
+          resultsHtml += "</ul>";
+          resultsDiv.innerHTML = resultsHtml;
+
+        } catch (error) {
+          alert('Error processing the game data.');
+          console.error(error);
+        }
+      } else {
+        alert("No game data found!");
+      }
+    };
+  </script>
+</body>
+</html>
