@@ -95,6 +95,11 @@
 
       const assignments = shufflePlayers(players);
 
+      if (!assignments) {
+        alert('Unable to generate valid assignments. Try again.');
+        return;
+      }
+
       // Generate individual links for each player
       let linksHTML = '';
       players.forEach(player => {
@@ -125,7 +130,28 @@
     }
 
     function isValidShuffle(original, shuffled) {
-      return original.every((player, i) => player !== shuffled[i]);
+      const restrictedPairs = [
+        ["Caroline", "Becca"],
+        ["Caroline", "Randy"],
+        ["Caroline", "Harper"],
+        ["Becca", "Caroline"],
+        ["Becca", "Randy"],
+        ["Becca", "Harper"],
+        ["Randy", "Caroline"],
+        ["Randy", "Becca"],
+        ["Randy", "Harper"],
+        ["Harper", "Caroline"],
+        ["Harper", "Becca"],
+        ["Harper", "Randy"],
+      ];
+
+      return original.every((player, i) => {
+        const recipient = shuffled[i];
+        const isRestricted = restrictedPairs.some(
+          ([giver, receiver]) => giver === player && receiver === recipient
+        );
+        return player !== recipient && !isRestricted;
+      });
     }
   </script>
 </body>
