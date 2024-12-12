@@ -131,18 +131,16 @@
 
     function isValidShuffle(original, shuffled) {
       const restrictedPairs = [
-        ["Caroline", "Becca"],
-        ["Caroline", "Randy"],
-        ["Caroline", "Harper"],
-        ["Becca", "Caroline"],
+        ["Lisa", "Len"],
+        ["Len", "Lisa"],
         ["Becca", "Randy"],
         ["Becca", "Harper"],
-        ["Randy", "Caroline"],
         ["Randy", "Becca"],
         ["Randy", "Harper"],
-        ["Harper", "Caroline"],
         ["Harper", "Becca"],
         ["Harper", "Randy"],
+        ["Beverly", "Bill"],
+        ["Bill", "Beverly"]
       ];
 
       return original.every((player, i) => {
